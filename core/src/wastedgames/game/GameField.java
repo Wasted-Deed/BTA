@@ -64,7 +64,7 @@ public class GameField extends ApplicationAdapter {
         map.draw(batch);
         batch.end();
 
-       // stage.act(100);
+        stage.act(100);
         stage.draw();
     }
 

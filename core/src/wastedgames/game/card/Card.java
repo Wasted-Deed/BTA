@@ -30,4 +30,9 @@ public class Card extends Dialog
     public Card(String title, WindowStyle windowStyle) {
         super(title, windowStyle);
     }
+    protected void result(Object object)
+    {
+        this.hide();
+
+    }
 }
