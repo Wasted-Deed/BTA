@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Map;
+import wastedgames.game.map.Test;
 
 public class GameField extends ApplicationAdapter {
     Map map;
@@ -22,6 +23,7 @@ public class GameField extends ApplicationAdapter {
         camera.setToOrtho(false, 1280, 720);
         map = new Map();
         map.fillMap();
+        Test.test();
     }
 
     @Override

@@ -56,7 +56,6 @@ public class Map implements Drawable {
         while(par.getOrDefault(end, start) != start) {
             end = par.get(end);
             answer.add(end);
-            System.out.println(end.getName());
         }
         answer.add(start);
         return answer;
