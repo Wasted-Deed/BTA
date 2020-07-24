@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import wastedgames.game.card.Card;
 import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Map;
+import wastedgames.game.map.Test;
 
 public class GameField extends ApplicationAdapter {
     Map map;
