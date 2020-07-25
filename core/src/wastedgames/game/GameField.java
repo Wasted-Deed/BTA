@@ -1,18 +1,19 @@
 package wastedgames.game;
 
-import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.files.FileHandle;
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -21,52 +22,106 @@ import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Map;
 import wastedgames.game.map.Test;
 
-public class GameField extends ApplicationAdapter {
+public class GameField implements Screen
+{
+    Main main;
     Map map;
     OrthographicCamera camera;
     SpriteBatch batch;
-    Card card;
+    Card event;
+    Array<TextButton> ButtonsUI;
     Stage stage;
-    @Override
-    public void create() {
+    Skin skin=new Skin();
 
-        ResourceLoader.loadResources();
-        batch = new SpriteBatch();
-        camera = new OrthographicCamera();
 
-        camera.setToOrtho(false, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
+
+
+    GameField(Skin skin, SpriteBatch batch, OrthographicCamera camera, final Main game,Stage stage)
+    {
+        this.main=game;
+        this.batch=batch;
+        this.camera=camera;
+        this.skin=skin;
+        this.stage=stage;
+        ButtonsUI=new Array<>();
         map = new Map();
         map.fillMap();
-        Viewport view = new StretchViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        view.setCamera(camera);
-        stage=new Stage(view,batch);
-        Skin skin=new Skin();
-        FileHandle fileHandle = Gdx.files.internal("uiskin.json");
-        FileHandle atlasFile = fileHandle.sibling("uiskin.atlas");
-        skin.addRegions(new TextureAtlas(atlasFile));
-        skin.load(Gdx.files.internal("uiskin.json"));
-        card=new Card("Event",skin );
-        Gdx.input.setInputProcessor(stage);
-        card.show(stage);
-       card.setScale(3);
 
+        event =new Card("Event",skin );
+        event.show(stage);
+        event.setScale(3);
+        TextButton BTechTree=new TextButton("Technologies",skin);
+        BTechTree.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()-50);
+        BTechTree.setHeight(50);
+        BTechTree.setWidth(300);
+        BTechTree.getLabel().setFontScale((float) 2.5);
+        BTechTree.addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                main.setScreen(main.getGameScreens().get("Technologies"));
+            }
+        });
+        stage.addActor(BTechTree);
+        ButtonsUI.add(BTechTree);
+        Gdx.input.setInputProcessor(stage);
 
     }
 
+
+
     @Override
-    public void render()
+    public void show()
+    {
+        for(int i=0;i<ButtonsUI.size;i++)
+        {
+            TextButton button=ButtonsUI.get(0);
+            button.setVisible(true);
+        }
+    }
+
+    @Override
+    public void render(float delta)
     {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         camera.update();
-
-
         batch.begin();
         map.draw(batch);
+        for (int i=0;i<ButtonsUI.size;i++)
+        {
+            TextButton currentButton=ButtonsUI.get(i);
+            currentButton.draw(batch,1);
+        }
         batch.end();
-
         stage.act(100);
         stage.draw();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+
+    }
+
+    @Override
+    public void pause() {
+
+    }
+
+    @Override
+    public void resume() {
+
+    }
+
+    @Override
+    public void hide()
+    {
+       for(int i=0;i<ButtonsUI.size;i++)
+       {
+           TextButton button=ButtonsUI.get(0);
+           button.setVisible(false);
+       }
     }
 
     @Override
