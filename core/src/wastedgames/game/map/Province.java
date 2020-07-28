@@ -13,20 +13,26 @@ public class Province implements Drawable, Comparable<Province> {
     private Sprite appearance;
     private String name;
     private int level;
+    private Player owner;
 
 
-    public Province(ArrayList<Province> neighbours, String name, int level) {
+    public Province(ArrayList<Province> neighbours, String name, int level, Player owner) {
         this.neighbours = neighbours;
         this.name = name;
         this.level = level;
+        this.owner = owner;
     }
 
     public Province(ArrayList<Province> neighbours, String name) {
-        this(neighbours, name, 1);
+        this(neighbours, name, 1, null);
+    }
+
+    public Province(ArrayList<Province> neighbours, String name, Player owner) {
+        this(neighbours, name, 1, owner);
     }
 
     public Province(String name) {
-        this(null, name, 1);
+        this(null, name, 1, null);
     }
 
     public void setAppearance(Sprite appearance) {

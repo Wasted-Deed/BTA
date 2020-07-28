@@ -4,6 +4,8 @@ import java.util.*;
 
 public class Test {
     public static void test() {
+        Unit unit1 = new Infantry(1);
+        Unit unit2 = new Infantry(2);
         ArrayList<Province> a = new ArrayList<>();
         a.add(new Province( "Moscow"));
         a.add(new Province("Paris"));
