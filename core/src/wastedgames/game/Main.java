@@ -10,9 +10,9 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.ObjectMap;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
+import wastedgames.game.Screen.GameField;
+import wastedgames.game.Screen.ResearchWindow;
 import wastedgames.game.maintenance.ResourceLoader;
 
 public class Main extends Game

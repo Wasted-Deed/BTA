@@ -1,4 +1,4 @@
-package wastedgames.game;
+package wastedgames.game.Screen;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -17,6 +17,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import wastedgames.game.Main;
 import wastedgames.game.card.Card;
 import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Map;
@@ -30,7 +31,8 @@ public class GameField implements Screen
     Card event;
     Array<TextButton> ButtonsUI;
     Stage stage;
-    Skin skin=new Skin();
+    Skin skin;
+    private int year;
 
 
 
@@ -50,6 +52,25 @@ public class GameField implements Screen
         event.addButton("Yes");
         event.show(stage);
         event.setScale(3);
+        final TextButton BNextMove=new TextButton(String.valueOf(year),skin);
+        BNextMove.setHeight(50);
+        BNextMove.setWidth(300);
+        BNextMove.setPosition(Gdx.graphics.getWidth()-BNextMove.getWidth(),0);
+        BNextMove.getLabel().setFontScale((float) 2.5);
+        BNextMove.addListener(new ChangeListener()
+            {
+                @Override
+                public void changed(ChangeEvent event, Actor actor)
+                {
+                    /*Управление передается AI
+                    ********
+                    */
+                    year++;
+                    BNextMove.setText("Year: "+year);
+                }
+            });
+
+        stage.addActor(BNextMove);
         TextButton BTechTree=new TextButton("Technologies",skin);
         BTechTree.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()-50);
         BTechTree.setHeight(50);
@@ -64,6 +85,7 @@ public class GameField implements Screen
             }
         });
         stage.addActor(BTechTree);
+
         stage.addActor(event);
         ButtonsUI.add(BTechTree);
         Gdx.input.setInputProcessor(stage);
