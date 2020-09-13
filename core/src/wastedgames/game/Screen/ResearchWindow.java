@@ -1,4 +1,4 @@
-package wastedgames.game;
+package wastedgames.game.Screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import wastedgames.game.Main;
 import wastedgames.game.Tech.DescribeTech;
 import wastedgames.game.Tech.TechTreeDrawer;
 import wastedgames.game.Tech.Technology;
