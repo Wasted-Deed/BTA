@@ -17,6 +17,7 @@ import wastedgames.game.maintenance.ResourceLoader;
 
 public class Main extends Game
 {
+
     OrthographicCamera camera;
     SpriteBatch batch;
     Skin skin=new Skin();
@@ -36,12 +37,11 @@ public class Main extends Game
     {
         ResourceLoader.loadResources();
         batch = new SpriteBatch();
-
         GameScreens=new ObjectMap<>();
         camera = new OrthographicCamera();
-        camera.setToOrtho(false, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
-
         stage=new Stage();
+
+        camera.setToOrtho(false, Gdx.graphics.getWidth(),  Gdx.graphics.getHeight());
         FileHandle fileHandle = Gdx.files.internal("uiskin.json");
         FileHandle atlasFile = fileHandle.sibling("uiskin.atlas");
         skin.addRegions(new TextureAtlas(atlasFile));
@@ -50,7 +50,6 @@ public class Main extends Game
         GameScreens.put("Technologies",new ResearchWindow(camera,batch,skin,stage,this));
         setScreen(GameScreens.get("Field"));
 
-        //setScreen(new ResearchWindow(camera,batch,skin));
     }
     @Override
     public  void render()

@@ -47,6 +47,7 @@ public class GameField implements Screen
         map.fillMap();
 
         event =new Card("Event",skin );
+        event.addButton("Yes");
         event.show(stage);
         event.setScale(3);
         TextButton BTechTree=new TextButton("Technologies",skin);
@@ -63,6 +64,7 @@ public class GameField implements Screen
             }
         });
         stage.addActor(BTechTree);
+        stage.addActor(event);
         ButtonsUI.add(BTechTree);
         Gdx.input.setInputProcessor(stage);
 
@@ -94,6 +96,7 @@ public class GameField implements Screen
             currentButton.draw(batch,1);
         }
         batch.end();
+
         stage.act(100);
         stage.draw();
     }

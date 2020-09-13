@@ -5,7 +5,16 @@ import com.badlogic.gdx.utils.Array;
 public class Technology
 {
     String name;
+    String description;
     private Array<Technology> nextTechnologies;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public String getName() {
         return name;
