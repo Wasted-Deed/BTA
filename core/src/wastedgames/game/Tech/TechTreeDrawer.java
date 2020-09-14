@@ -95,7 +95,25 @@ public class TechTreeDrawer
     } */
     public void update()
     {
-
+        ObjectMap.Entries<Technology, TextButton> it=layoutMapping.iterator();
+        while (it.hasNext())
+        {
+            TextButton current=it.next().value;
+            Technology currentTech=layoutMapping.findKey(current,true);
+            if (currentTech.getConditionTech()==ConditionTech.EXPLORE )
+            {
+                current.getLabel().setColor(Color.RED);
+            }
+            if (currentTech.getConditionTech()==ConditionTech.LEARNED )
+            {
+                current.getLabel().setColor(Color.ORANGE);
+            }
+            if (!currentTech.isCanExplore() )
+            {
+               // current.setChecked(false);
+                current.setDisabled(true);
+            }
+        }
     }
     public Stage getStage() {
         return stage;

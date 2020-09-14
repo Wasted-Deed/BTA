@@ -11,7 +11,7 @@ import javax.naming.Context;
 
 public class Card extends Dialog
 {
-    private int result;
+    private int result=-1;
 
     @Override
     public void act(float delta)
@@ -23,7 +23,7 @@ public class Card extends Dialog
 
     private int countButton=0;
     {
-        text("1234567890134235251\n 1  1231   ");
+       // text("1234567890134235251\n 1  1231   ");
       //  button("Yes","Yes");
         //button("No","No");
     }

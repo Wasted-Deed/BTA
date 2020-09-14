@@ -3,12 +3,14 @@ package wastedgames.game.Tech;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 public class DescribeTech extends Table
 {
@@ -51,6 +53,16 @@ public class DescribeTech extends Table
         setSize(Gdx.graphics.getWidth(),200);
         b_explore=new TextButton("Explore",skin);
         b_explore.getLabel().setFontScale(3);
+        b_explore.addListener(new ChangeListener()
+            {
+                @Override
+                public void changed(ChangeEvent event, Actor actor)
+                {
+
+                    currentTech.setConditionTech(ConditionTech.EXPLORE);
+
+                }
+            });
         describe=new Label("",skin);
         describe.setFontScale(4,4);
         this.add(describe).width(3*getWidth()/4).height(getHeight()-10).left();

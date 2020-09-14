@@ -4,9 +4,69 @@ import com.badlogic.gdx.utils.Array;
 
 public class Technology
 {
-    String name;
-    String description;
+    private  String name;
+    private String description;
+    private ConditionTech conditionTech=ConditionTech.NO_LEARNED;
+    private int cost;
+    private boolean canExplore=false;
+    private  int id;
     private Array<Technology> nextTechnologies;
+    public ConditionTech getConditionTech() {
+        return conditionTech;
+    }
+
+    public void setConditionTech(ConditionTech conditionTech) {
+        this.conditionTech = conditionTech;
+    }
+
+    public boolean isCanExplore() {
+        return canExplore;
+    }
+
+    public void setCanExplore(boolean canExplore) {
+        this.canExplore = canExplore;
+    }
+    public void update(Technology CurrentExplore)
+    {
+
+        if (conditionTech==ConditionTech.EXPLORE)
+        {
+           if (CurrentExplore==this){
+               setCost(cost-1);
+           }else{
+               if(cost>0)this.setConditionTech(ConditionTech.NO_LEARNED);
+           }
+        }
+        Array.ArrayIterator<Technology> iterator = (Array.ArrayIterator<Technology>) nextTechnologies.iterator();
+        while(iterator.hasNext())
+        {
+            Technology current=iterator.next();
+            current.update(CurrentExplore);
+        }
+    }
+
+    public int getCost() {
+        return cost;
+    }
+
+    public void setCost(int cost)
+    {
+        this.cost = cost;
+        if (cost<=0)
+        {
+            conditionTech=ConditionTech.LEARNED;
+            Array.ArrayIterator<Technology> iterator = (Array.ArrayIterator<Technology>) nextTechnologies.iterator();
+            while(iterator.hasNext())
+            {
+                Technology current=iterator.next();
+                current.setCanExplore(true);
+            }
+        }
+    }
+
+
+
+
 
     public String getDescription() {
         return description;
@@ -20,10 +80,19 @@ public class Technology
         return name;
     }
 
-    public Technology(String name)
+    public Technology(String name,int id)
     {
         this.name = name;
+        this.id=id;
         nextTechnologies=new Array<>();
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setName(String name) {

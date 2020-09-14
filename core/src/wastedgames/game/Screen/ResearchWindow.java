@@ -12,8 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.utils.Array;
 
 import wastedgames.game.Main;
+import wastedgames.game.Tech.ConditionTech;
 import wastedgames.game.Tech.DescribeTech;
 import wastedgames.game.Tech.TechTreeDrawer;
 import wastedgames.game.Tech.Technology;
@@ -23,14 +25,33 @@ public class ResearchWindow implements Screen
 {
     Main main;
     Technology Technologies;
+    Technology ExploreTech;
     DescribeTech describeTech;
     OrthographicCamera camera;
     SpriteBatch batch;
+
     TechTreeDrawer DrawerTree;
     Skin skin;
     Stage stage;
     TextButton ButtonExit;
-    public void setListenerTech(final TextButton button, final Technology tech)
+
+    public Technology getExploreTech() {
+        return ExploreTech;
+    }
+
+    public void setExploreTech(Technology exploreTech) {
+        ExploreTech = exploreTech;
+    }
+
+    public Technology getTechnologies() {
+        return Technologies;
+    }
+
+    public void setTechnologies(Technology technologies) {
+        Technologies = technologies;
+    }
+
+    private void setListenerTech(final TextButton button, final Technology tech)
     {
         button.addListener(new ChangeListener()
         {
@@ -38,8 +59,40 @@ public class ResearchWindow implements Screen
             public void changed(ChangeEvent event, Actor actor)
             {
                 describeTech.setCurrentTech(tech);
+
             }
         });
+    }
+    private void RecursiveTechnology(Technology tech)
+    {
+        float height=100;
+        float width=300;
+        switch (tech.getId()) {
+            case 1:
+                setListenerTech(DrawerTree.add(tech,new Rectangle(0,Gdx.graphics.getHeight()/2,width,height)),  tech);
+                break;
+            case 2:
+                setListenerTech(DrawerTree.add(tech,new Rectangle(width*2,Gdx.graphics.getHeight()/2-2*height,width,height)), tech);
+                break;
+            case 3:
+                setListenerTech(DrawerTree.add(tech,new Rectangle(width*2,Gdx.graphics.getHeight()/2,width,height)),  tech);
+                break;
+            case 4:
+                setListenerTech(DrawerTree.add(tech,new Rectangle(width*2,Gdx.graphics.getHeight()/2+2*height,width,height)),  tech);
+                break;
+            case 5:
+                setListenerTech(DrawerTree.add(tech,new Rectangle(width*4,Gdx.graphics.getHeight()/2+2*height,width,height)),  tech);
+                break;
+
+        }
+
+        Array.ArrayIterator<Technology> iterator = (Array.ArrayIterator<Technology>) tech.getNextTechnologies().iterator();
+        while(iterator.hasNext())
+        {
+            Technology current=iterator.next();
+
+            RecursiveTechnology(current);
+        }
     }
     public ResearchWindow(OrthographicCamera camera, SpriteBatch batch, Skin skin, Stage stage, final Main main)
     {
@@ -48,36 +101,25 @@ public class ResearchWindow implements Screen
         this.stage=stage;
         this.batch=batch;
         this.main=main;
-        final Technology tech1=new Technology("Technology №1");
-        tech1.setDescription("Description of Technology №1 ");
-        Technology tech2=new Technology("Technology №2.1");
-        tech2.setDescription("Description of Technology №2.1");
-        Technology tech3=new Technology("Technology №2.2");
-        tech3.setDescription("Description of Technology №2.2");
-        Technology tech4=new Technology("Technology №2.3");
-        tech4.setDescription("Description of Technology №2.3");
-        Technology tech5=new Technology("Technology №3");
-        tech4.setDescription("Description of Technology №3 is");
-        Technologies=tech1;
-        tech1.getNextTechnologies().add(tech2);
-        tech1.getNextTechnologies().add(tech3);
-        tech1.getNextTechnologies().add(tech4);
-        tech4.getNextTechnologies().add(tech5);
+
 
         describeTech=new DescribeTech(skin,stage);
         describeTech.setVisible(false);
         describeTech.setColor(Color.PURPLE);
         describeTech.debug();
+        describeTech.getB_explore().addListener(new ChangeListener()
+            {
+                @Override
+                public void changed(ChangeEvent event, Actor actor) {
+                    ExploreTech = describeTech.getCurrentTech();
+                    ExploreTech.setConditionTech(ConditionTech.EXPLORE);
+                }
+            });
         DrawerTree=new TechTreeDrawer(batch, skin,stage);
         DrawerTree.setStage(stage);
-        float height=100;
-        float width=300;
-        //Установка слушателя на нажатие кнопок технологий
-        setListenerTech(DrawerTree.add(tech1,new Rectangle(0,Gdx.graphics.getHeight()/2,width,height)),  tech2);
-        setListenerTech(DrawerTree.add(tech2,new Rectangle(width*2,Gdx.graphics.getHeight()/2-2*height,width,height)),  tech2);
-        setListenerTech(DrawerTree.add(tech3,new Rectangle(width*2,Gdx.graphics.getHeight()/2,width,height)),  tech3);
-        setListenerTech(DrawerTree.add(tech4,new Rectangle(width*2,Gdx.graphics.getHeight()/2+2*height,width,height)),  tech4);
-        setListenerTech(DrawerTree.add(tech5,new Rectangle(width*4,Gdx.graphics.getHeight()/2+2*height,width,height)),  tech4);
+
+
+
         DrawerTree.hide();
 
         ButtonExit=new TextButton("X",skin);
@@ -90,9 +132,7 @@ public class ResearchWindow implements Screen
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-
                 main.setScreen(main.getGameScreens().get("Field"));
-
             }
         });
         ButtonExit.setVisible(false);
@@ -103,6 +143,7 @@ public class ResearchWindow implements Screen
     @Override
     public void show()
     {
+        RecursiveTechnology(Technologies);
         describeTech.setVisible(true);
         DrawerTree.show();
         ButtonExit.setVisible(true);

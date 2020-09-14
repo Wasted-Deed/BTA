@@ -18,9 +18,11 @@ import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import wastedgames.game.Main;
+import wastedgames.game.Tech.Technology;
 import wastedgames.game.card.Card;
 import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Map;
+import wastedgames.game.map.Player;
 import wastedgames.game.map.Test;
 
 public class GameField implements Screen
@@ -33,12 +35,21 @@ public class GameField implements Screen
     Array<TextButton> ButtonsUI;
     Stage stage;
     Skin skin;
+    Player player=new Player();
     private int year;
 
 
 
+    public void showEvent(String text)
+    {
+        event =new Card("Event",skin );
+        event.addButton("Yes");
+        event.text(text);
+        event.show(stage);
+        event.setScale(3);
+    }
 
-    GameField(Skin skin, SpriteBatch batch, OrthographicCamera camera, final Main game,Stage stage)
+    public GameField(Skin skin, SpriteBatch batch, OrthographicCamera camera, final Main game, Stage stage)
     {
         this.main=game;
         this.batch=batch;
@@ -48,11 +59,29 @@ public class GameField implements Screen
         ButtonsUI=new Array<>();
         map = new Map();
         map.fillMap();
+        Technology tech1=new Technology("Technology №1",1);
+        tech1.setDescription("Technology №1 costs 1 ");
+        tech1.setCanExplore(true);
+        tech1.setCost(1);
+        Technology tech2=new Technology("Technology №2.1",2);
+        tech2.setDescription("Technology №2.1 costs 1");
+        tech2.setCost(1);
+        Technology tech3=new Technology("Technology №2.2",3);
+        tech3.setDescription("Technology №2.2 costs 1");
+        tech3.setCost(2);
+        Technology tech4=new Technology("Technology №2.3",4);
+        tech4.setDescription("Technology №2.3 costs 1");
+        tech4.setCost(1);
+        Technology tech5=new Technology("Technology №3",5);
+        tech5.setDescription("Technology №3 costs 1");
+        tech5.setCost(1);
+        tech1.getNextTechnologies().add(tech2);
+        tech1.getNextTechnologies().add(tech3);
+        tech1.getNextTechnologies().add(tech4);
+        tech4.getNextTechnologies().add(tech5);
+        player.setTechnologies(tech1);
 
-        event =new Card("Event",skin );
-        event.addButton("Yes");
-        event.show(stage);
-        event.setScale(3);
+
         final TextButton BNextMove=new TextButton(String.valueOf(year),skin);
         BNextMove.setHeight(50);
         BNextMove.setWidth(300);
@@ -66,8 +95,12 @@ public class GameField implements Screen
                     /*Управление передается AI
                     ********
                     */
+                    ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
+                    player.setCurrentExlpore(win.getExploreTech());
+                    player.getTechnologies().update(player.getCurrentExlpore());
                     year++;
                     BNextMove.setText("Year: "+year);
+                    showEvent("Goodbye "+year);
                 }
             });
 
@@ -82,13 +115,19 @@ public class GameField implements Screen
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                main.setScreen(main.getGameScreens().get("Technologies"));
+                ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
+                win.setTechnologies(player.getTechnologies());
+                win.setExploreTech(player.getCurrentExlpore());
+                main.setScreen(win);
+
             }
         });
+        showEvent("Hello!");
         stage.addActor(BTechTree);
 
-        stage.addActor(event);
+
         ButtonsUI.add(BTechTree);
+
         Gdx.input.setInputProcessor(stage);
 
     }
@@ -103,6 +142,7 @@ public class GameField implements Screen
             TextButton button=ButtonsUI.get(0);
             button.setVisible(true);
         }
+
     }
 
     @Override
@@ -110,6 +150,7 @@ public class GameField implements Screen
     {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         camera.update();
         batch.begin();
         map.draw(batch);
