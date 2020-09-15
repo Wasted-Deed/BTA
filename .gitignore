@@ -1,8 +1,14 @@
 ## Java
-
-*.class
+*.gradle
+*.properties
+*.bat
+*.xml
+*.pro
 *.war
 *.ear
+*.jar
+*.md
+
 hs_err_pid*
 
 ## Robovm
@@ -125,3 +131,4 @@ Thumbs.db
 !/ios-moe/xcode/*.xcodeproj/xcshareddata
 !/ios-moe/xcode/*.xcodeproj/project.pbxproj
 /ios-moe/xcode/native/
+
