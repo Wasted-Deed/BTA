@@ -6,14 +6,84 @@ import com.badlogic.gdx.math.Vector2;
 
 import java.util.ArrayList;
 
+import wastedgames.game.Tech.Technology;
 import wastedgames.game.chars.Drawable;
 
 public class Province implements Drawable, Comparable<Province> {
     private ArrayList<Province> neighbours;
     private Sprite appearance;
     private String name;
-    private int level;
+    private ArrayList<Unit> unitsforbuy=new ArrayList<>();
+    private ArrayList<Unit> units=new ArrayList<>();
+    private ArrayList<Unit> queuemake=new ArrayList<>();
     private Player owner;
+    private int level;
+
+    public ArrayList<Unit> getUnits() {
+        return units;
+    }
+
+    public void setUnits(ArrayList<Unit> units) {
+        this.units = units;
+    }
+
+    public ArrayList<Unit> getQueuemake() {
+        return queuemake;
+    }
+
+    public void setQueuemake(ArrayList<Unit> queuemake) {
+        this.queuemake = queuemake;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ArrayList<Unit> getUnitsforbuy() {
+        return unitsforbuy;
+    }
+
+    public void setUnitsforbuy(ArrayList<Unit> unitsforbuy) {
+        this.unitsforbuy = unitsforbuy;
+    }
+
+    public Player getOwner() {
+        return owner;
+    }
+    public void addTech(Technology newTech)
+    {
+       for (Unit unit:newTech.getOpenedUnit())
+       {
+           unitsforbuy.add(unit);
+       }
+    }
+    public void setOwner(Player owner)
+    {
+        this.owner = owner;
+        owner.getProvinces().add(this);
+
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void update()
+    {
+        for(Unit unit:queuemake)
+        {
+            unit.setCountYears(unit.getCountYears()-1);
+            if (unit.getCountYears()<=0)
+            {
+                units.add(unit);
+                queuemake.remove(unit);
+            }
+        }
+    }
 
 
     public Province(ArrayList<Province> neighbours, String name, int level, Player owner) {
@@ -21,6 +91,10 @@ public class Province implements Drawable, Comparable<Province> {
         this.name = name;
         this.level = level;
         this.owner = owner;
+    }
+
+    public Sprite getAppearance() {
+        return appearance;
     }
 
     public Province(ArrayList<Province> neighbours, String name) {

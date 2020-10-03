@@ -2,12 +2,28 @@ package wastedgames.game.Tech;
 
 import com.badlogic.gdx.utils.Array;
 
+import java.util.ArrayList;
+
+import wastedgames.game.map.Unit;
+
 public class Technology
 {
     private  String name;
+    private ArrayList<Unit> openedUnit=new ArrayList();
+
+
+    public ArrayList<Unit> getOpenedUnit() {
+        return openedUnit;
+    }
+
+    public void setOpenedUnit(ArrayList<Unit> openedUnit) {
+        this.openedUnit = openedUnit;
+    }
+
     private String description;
     private ConditionTech conditionTech=ConditionTech.NO_LEARNED;
     private int cost;
+
     private boolean canExplore=false;
     private  int id;
     private Array<Technology> nextTechnologies;
@@ -52,7 +68,7 @@ public class Technology
     public void setCost(int cost)
     {
         this.cost = cost;
-        if (cost<=0)
+        /*if (cost<=0)
         {
             conditionTech=ConditionTech.LEARNED;
             Array.ArrayIterator<Technology> iterator = (Array.ArrayIterator<Technology>) nextTechnologies.iterator();
@@ -61,12 +77,8 @@ public class Technology
                 Technology current=iterator.next();
                 current.setCanExplore(true);
             }
-        }
+        }*/
     }
-
-
-
-
 
     public String getDescription() {
         return description;

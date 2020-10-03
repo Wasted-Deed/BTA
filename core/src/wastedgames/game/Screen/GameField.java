@@ -1,29 +1,26 @@
 package wastedgames.game.Screen;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Event;
-import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
 
 import wastedgames.game.Main;
 import wastedgames.game.Tech.Technology;
 import wastedgames.game.card.Card;
 import wastedgames.game.maintenance.ResourceLoader;
+import wastedgames.game.map.Cavalry;
+import wastedgames.game.map.Infantry;
 import wastedgames.game.map.Map;
 import wastedgames.game.map.Player;
-import wastedgames.game.map.Test;
+import wastedgames.game.map.Province;
 
 public class GameField implements Screen
 {
@@ -57,14 +54,16 @@ public class GameField implements Screen
         this.skin=skin;
         this.stage=stage;
         ButtonsUI=new Array<>();
-        map = new Map();
-        map.fillMap();
-        Technology tech1=new Technology("Technology №1",1);
-        tech1.setDescription("Technology №1 costs 1 ");
+
+
+        Technology tech1=new Technology("Basic infantry",1);
+        tech1.getOpenedUnit().add(new Infantry(1));
+        tech1.setDescription("Costs 1 years.You will unlock the infantry ");
         tech1.setCanExplore(true);
         tech1.setCost(1);
-        Technology tech2=new Technology("Technology №2.1",2);
-        tech2.setDescription("Technology №2.1 costs 1");
+        Technology tech2=new Technology("Basic cavalry",2);
+        tech2.getOpenedUnit().add(new Cavalry(1));
+        tech2.setDescription("Costs 1 years.You will unlock the cavalry");
         tech2.setCost(1);
         Technology tech3=new Technology("Technology №2.2",3);
         tech3.setDescription("Technology №2.2 costs 1");
@@ -79,7 +78,7 @@ public class GameField implements Screen
         tech1.getNextTechnologies().add(tech3);
         tech1.getNextTechnologies().add(tech4);
         tech4.getNextTechnologies().add(tech5);
-        player.setTechnologies(tech1);
+        player.setAllTechnologies(tech1);
 
 
         final TextButton BNextMove=new TextButton(String.valueOf(year),skin);
@@ -97,7 +96,7 @@ public class GameField implements Screen
                     */
                     ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
                     player.setCurrentExlpore(win.getExploreTech());
-                    player.getTechnologies().update(player.getCurrentExlpore());
+                    player.getAllTechnologies().update(player.getCurrentExlpore());
                     year++;
                     BNextMove.setText("Year: "+year);
                     showEvent("Goodbye "+year);
@@ -116,13 +115,17 @@ public class GameField implements Screen
             public void changed(ChangeEvent event, Actor actor)
             {
                 ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
-                win.setTechnologies(player.getTechnologies());
+                win.setTechnologies(player.getAllTechnologies());
                 win.setExploreTech(player.getCurrentExlpore());
                 main.setScreen(win);
 
             }
         });
         showEvent("Hello!");
+        map = new Map(skin);
+        map.fillMap();
+        Province province=map.getProvinces().get(0);
+        province.setOwner(player);
         stage.addActor(BTechTree);
 
 
@@ -150,10 +153,12 @@ public class GameField implements Screen
     {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
+        player.update();
         camera.update();
         batch.begin();
+        map.update(stage,skin);
         map.draw(batch);
+
         for (int i=0;i<ButtonsUI.size;i++)
         {
             TextButton currentButton=ButtonsUI.get(i);

@@ -57,5 +57,6 @@ public class Card extends Dialog
         result= (int) object;
         this.hide();
 
+
     }
 }

@@ -1,21 +1,36 @@
 package wastedgames.game.map;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 
+import wastedgames.game.card.Province.CardProvince;
 import wastedgames.game.chars.Drawable;
 import wastedgames.game.maintenance.Image;
 import wastedgames.game.maintenance.ResourceLoader;
 
 public class Map implements Drawable {
     ArrayList<Province> provinces;
-
-    public Map() {
+    CardProvince info;
+    public Map( Skin skin )
+    {
         provinces = new ArrayList<>();
+
+    }
+
+    public ArrayList<Province> getProvinces() {
+        return provinces;
+    }
+
+    public void setProvinces(ArrayList<Province> provinces) {
+        this.provinces = provinces;
     }
 
     public void fillMap() {
@@ -61,8 +76,31 @@ public class Map implements Drawable {
         return answer;
     }
 
+    public void update(Stage stage,Skin skin)
+    {
+
+        Vector2 cursor=new Vector2(Gdx.input.getX(),Gdx.input.getY());
+        for (Province current: provinces)
+        {
+            current.update();
+            Rectangle rec=current.getAppearance().getBoundingRectangle();
+            rec.setY(Gdx.graphics.getHeight()-(rec.y+rec.height));
+            if (rec.contains(cursor)&&(info==null||info.getResult()!=-1))
+            {
+
+                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
+                info=new CardProvince("Province",skin,current );
+                info.setProvince(current);
+
+
+                info.show(stage);
+            }
+        }
+    }
     @Override
-    public void draw(SpriteBatch batch) {
+    public void draw(SpriteBatch batch)
+    {
+
         for (Province province : provinces) {
             province.draw(batch);
         }
