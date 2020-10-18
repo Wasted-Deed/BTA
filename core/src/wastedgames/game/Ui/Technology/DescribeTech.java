@@ -1,4 +1,4 @@
-package wastedgames.game.Tech;
+package wastedgames.game.Ui.Technology;
 
 
 import com.badlogic.gdx.Gdx;
@@ -11,6 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+
+import wastedgames.game.Tech.ConditionTech;
+import wastedgames.game.Tech.Technology;
 
 public class DescribeTech extends Table
 {
@@ -53,16 +56,6 @@ public class DescribeTech extends Table
         setSize(Gdx.graphics.getWidth(),200);
         b_explore=new TextButton("Explore",skin);
         b_explore.getLabel().setFontScale(3);
-        b_explore.addListener(new ChangeListener()
-            {
-                @Override
-                public void changed(ChangeEvent event, Actor actor)
-                {
-
-                    currentTech.setConditionTech(ConditionTech.EXPLORE);
-
-                }
-            });
         describe=new Label("",skin);
         describe.setFontScale(4,4);
         this.add(describe).width(3*getWidth()/4).height(getHeight()-10).left();

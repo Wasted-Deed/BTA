@@ -1,28 +1,39 @@
 package wastedgames.game.map;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.PriorityQueue;
+import java.util.function.Consumer;
 
-import wastedgames.game.card.Province.CardProvince;
-import wastedgames.game.chars.Drawable;
+import wastedgames.game.Ui.CradProvince.CardProvince;
 import wastedgames.game.maintenance.Image;
 import wastedgames.game.maintenance.ResourceLoader;
-
-public class Map implements Drawable {
+public class Map extends Group {
     ArrayList<Province> provinces;
+    Skin skin;
     CardProvince info;
-    public Map( Skin skin )
+    private Player human;
+
+    public Player getHuman() {
+        return human;
+    }
+
+    public void setHuman(Player human) {
+        this.human = human;
+    }
+
+    public Map(Skin skin )
     {
         provinces = new ArrayList<>();
-
+        this.skin=skin;
     }
 
     public ArrayList<Province> getProvinces() {
@@ -33,11 +44,66 @@ public class Map implements Drawable {
         this.provinces = provinces;
     }
 
-    public void fillMap() {
-        Province province0 = new Province("Paris");
-        province0.setAppearance(ResourceLoader.getSprite(Image.PROVINCE_PARIS));
+
+
+    public void click(Province province)
+    {
+        Formation selectedFormation=human.getSelectFormation();
+        if (selectedFormation==null) {
+            info = new CardProvince("province1", skin, province);
+            info.setProvince(province);
+            info.show(getStage());
+        }else
+        {
+            selectedFormation.setTrack(findPath(selectedFormation.getLocation(),province));
+        }
+    }
+    public void fillMap()
+    {
+
+        Province province0 = new Province(new SpriteDrawable(ResourceLoader.getSprite(Image.PROVINCE_PARIS)));
         province0.setPosition(new Vector2(200, 300));
+        province0.setName("province0");
+        this.addActor(province0.getAppearance());
         provinces.add(province0);
+        Province province1 = new Province(new SpriteDrawable(ResourceLoader.getSprite(Image.PROVINCE_PARIS)));
+        province1.setPosition(new Vector2(300, 300));
+        province1.setName("province1");
+        this.addActor(province1.getAppearance());
+        provinces.add(province1);
+        province0.getNeighbours().add(province1);
+
+        Province province2 = new Province(new SpriteDrawable(ResourceLoader.getSprite(Image.PROVINCE_PARIS)));
+        province2.setPosition(new Vector2(400, 300));
+        province2.setName("province2");
+        this.addActor(province2.getAppearance());
+        provinces.add(province2);
+        province1.getNeighbours().add(province2);
+
+        province2.getAppearance().getAppearance().addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                click(province2);
+            }
+        });
+        province1.getAppearance().getAppearance().addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                click(province1);
+            }
+        });
+        province0.getAppearance().getAppearance().addListener(new ChangeListener()
+                {
+                    @Override
+                    public void changed(ChangeEvent event, Actor actor)
+                    {
+                        click(province0);
+                    }
+                });
     }
 
     public static ArrayList<Province> findPath(Province a, Province end) {
@@ -76,33 +142,17 @@ public class Map implements Drawable {
         return answer;
     }
 
+
+    public void nextMove()
+    {
+        for (Province current: provinces)
+            current.update();
+
+    }
     public void update(Stage stage,Skin skin)
     {
 
-        Vector2 cursor=new Vector2(Gdx.input.getX(),Gdx.input.getY());
-        for (Province current: provinces)
-        {
-            current.update();
-            Rectangle rec=current.getAppearance().getBoundingRectangle();
-            rec.setY(Gdx.graphics.getHeight()-(rec.y+rec.height));
-            if (rec.contains(cursor)&&(info==null||info.getResult()!=-1))
-            {
-
-                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!");
-                info=new CardProvince("Province",skin,current );
-                info.setProvince(current);
-
-
-                info.show(stage);
-            }
-        }
+       if (info!=null)info.update();
     }
-    @Override
-    public void draw(SpriteBatch batch)
-    {
 
-        for (Province province : provinces) {
-            province.draw(batch);
-        }
-    }
 }

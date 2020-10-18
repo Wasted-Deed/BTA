@@ -14,13 +14,12 @@ import com.badlogic.gdx.utils.Array;
 
 import wastedgames.game.Main;
 import wastedgames.game.Tech.Technology;
-import wastedgames.game.card.Card;
+import wastedgames.game.Ui.Card;
 import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Cavalry;
 import wastedgames.game.map.Infantry;
 import wastedgames.game.map.Map;
 import wastedgames.game.map.Player;
-import wastedgames.game.map.Province;
 
 public class GameField implements Screen
 {
@@ -44,6 +43,10 @@ public class GameField implements Screen
         event.text(text);
         event.show(stage);
         event.setScale(3);
+    }
+
+    public Map getMap() {
+        return map;
     }
 
     public GameField(Skin skin, SpriteBatch batch, OrthographicCamera camera, final Main game, Stage stage)
@@ -80,7 +83,6 @@ public class GameField implements Screen
         tech4.getNextTechnologies().add(tech5);
         player.setAllTechnologies(tech1);
 
-
         final TextButton BNextMove=new TextButton(String.valueOf(year),skin);
         BNextMove.setHeight(50);
         BNextMove.setWidth(300);
@@ -91,18 +93,17 @@ public class GameField implements Screen
                 @Override
                 public void changed(ChangeEvent event, Actor actor)
                 {
-                    /*Управление передается AI
-                    ********
-                    */
+
                     ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
                     player.setCurrentExlpore(win.getExploreTech());
                     player.getAllTechnologies().update(player.getCurrentExlpore());
+                    map.nextMove();
+                    player.update();
                     year++;
                     BNextMove.setText("Year: "+year);
                     showEvent("Goodbye "+year);
                 }
             });
-
         stage.addActor(BNextMove);
         TextButton BTechTree=new TextButton("Technologies",skin);
         BTechTree.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()-50);
@@ -117,18 +118,25 @@ public class GameField implements Screen
                 ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
                 win.setTechnologies(player.getAllTechnologies());
                 win.setExploreTech(player.getCurrentExlpore());
+
                 main.setScreen(win);
 
             }
         });
-        showEvent("Hello!");
+
         map = new Map(skin);
+        map.setHuman(player);
+        map.setPosition(0,50);
+        map.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()-100);
         map.fillMap();
-        Province province=map.getProvinces().get(0);
-        province.setOwner(player);
+        map.debug();
+
+       map.getProvinces().get(0).setOwner(player);
+        map.getProvinces().get(1).setOwner(player);
+
+        stage.addActor(map);
         stage.addActor(BTechTree);
-
-
+        showEvent("Hello!");
         ButtonsUI.add(BTechTree);
 
         Gdx.input.setInputProcessor(stage);
@@ -145,6 +153,7 @@ public class GameField implements Screen
             TextButton button=ButtonsUI.get(0);
             button.setVisible(true);
         }
+        map.setVisible(true);
 
     }
 
@@ -153,11 +162,11 @@ public class GameField implements Screen
     {
         Gdx.gl.glClearColor(1, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        player.update();
+
         camera.update();
         batch.begin();
         map.update(stage,skin);
-        map.draw(batch);
+       /// map.draw(batch);
 
         for (int i=0;i<ButtonsUI.size;i++)
         {
@@ -193,6 +202,7 @@ public class GameField implements Screen
            TextButton button=ButtonsUI.get(0);
            button.setVisible(false);
        }
+        map.setVisible(false);
     }
 
     @Override

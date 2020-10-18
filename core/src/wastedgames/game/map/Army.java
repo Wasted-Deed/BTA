@@ -4,10 +4,19 @@ import java.util.ArrayList;
 
 public class Army {
     private Player owner;
-    private ArrayList<Formation> army;
+    private ArrayList<Formation> formations=new ArrayList<>();
 
-    Army(ArrayList<Formation> army, Player owner) {
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public ArrayList<Formation> getFormations() {
+        return formations;
+    }
+
+    Army(Player owner) {
         this.owner = owner;
-        this.army = army;
+
     }
 }

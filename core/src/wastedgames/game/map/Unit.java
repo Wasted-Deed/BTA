@@ -1,5 +1,7 @@
 package wastedgames.game.map;
 
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+
 public abstract class Unit implements Cloneable
 {
 
@@ -16,7 +18,20 @@ public abstract class Unit implements Cloneable
 
     private UnitType unitType;
     private String name;
-    private int health;
+    private int current_health;
+    private int max_health;
+    private boolean selected;
+
+
+
+    public int getMax_health() {
+        return max_health;
+    }
+
+    public void setMax_health(int max_health) {
+        this.max_health = max_health;
+    }
+
     private int power;
     private int speed;
     private int price;
@@ -40,8 +55,8 @@ public abstract class Unit implements Cloneable
         this.name = name;
     }
 
-    public void setHealth(int health) {
-        this.health = health;
+    public void setCurrent_health(int current_health) {
+        this.current_health = current_health;
     }
 
     public void setPower(int power) {
@@ -72,9 +87,10 @@ public abstract class Unit implements Cloneable
         this.armor = armor;
     }
 
-    public Unit(UnitType unitType, int health, int power, int speed, int price, int armor, int level, int countYears, String  name) {
+    public Unit(UnitType unitType, int current_health,int max_health, int power, int speed, int price, int armor, int level, int countYears, String  name) {
         this.unitType = unitType;
-        this.health = health;
+        this.current_health = current_health;
+        this.max_health=max_health;
         this.power = power;
         this.speed = speed;
         this.price = price;
@@ -84,8 +100,8 @@ public abstract class Unit implements Cloneable
         this.name=name;
     }
 
-    public int getHealth() {
-        return health;
+    public int getCurrent_health() {
+        return current_health;
     }
 
     public int getPower() {
@@ -113,10 +129,10 @@ public abstract class Unit implements Cloneable
     }
 
     protected void getDamage(int damage) {
-        this.health -= damage / armor;
+        this.current_health -= damage / armor;
     }
 
     protected void getHeal(int heal) {
-        this.health += heal;
+        this.current_health += heal;
     }
 }

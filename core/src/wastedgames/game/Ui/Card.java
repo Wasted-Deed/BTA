@@ -1,4 +1,4 @@
-package wastedgames.game.card;
+package wastedgames.game.Ui;
 
 
 

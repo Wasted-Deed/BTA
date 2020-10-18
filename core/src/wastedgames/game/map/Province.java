@@ -1,37 +1,65 @@
 package wastedgames.game.map;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import java.util.ArrayList;
 
 import wastedgames.game.Tech.Technology;
-import wastedgames.game.chars.Drawable;
+import wastedgames.game.Ui.map.UiProvince;
 
-public class Province implements Drawable, Comparable<Province> {
-    private ArrayList<Province> neighbours;
-    private Sprite appearance;
+public class Province  implements  Comparable<Province> {
+    private ArrayList<Province> neighbours=new ArrayList<>();
+    private UiProvince appearance;
     private String name;
     private ArrayList<Unit> unitsforbuy=new ArrayList<>();
-    private ArrayList<Unit> units=new ArrayList<>();
-    private ArrayList<Unit> queuemake=new ArrayList<>();
+    private ArrayList<Unit> unitsInCastle =new ArrayList<>();
+    private ArrayList<Formation>  formations=new ArrayList<>();
+    private Unit queuemake=null;
     private Player owner;
     private int level;
 
-    public ArrayList<Unit> getUnits() {
-        return units;
+    public Province(Drawable image)
+    {
+        appearance=new UiProvince(image);
+
     }
 
-    public void setUnits(ArrayList<Unit> units) {
-        this.units = units;
+    public ArrayList<Formation> getFormations() {
+        return formations;
+    }
+    public  void addFormation(Formation new_formation)
+    {
+        new_formation.setLocation(this);
+        formations.add(new_formation);
+        new_formation.getAppearance().setPosition(20,20);
+        new_formation.getAppearance().setSize(50,50);
+        appearance.addFormation(new_formation.getAppearance(),new_formation);
+    }
+    public  boolean removeFormation(Formation formation)
+    {
+        formations.remove(formation);
+        appearance.removeFormation(formation);
+        return  false;
+    }
+    public void setFormations(ArrayList<Formation> formations) {
+        this.formations = formations;
     }
 
-    public ArrayList<Unit> getQueuemake() {
+
+    public ArrayList<Unit> getUnitsInCastle() {
+        return unitsInCastle;
+    }
+
+    public void setUnitsInCastle(ArrayList<Unit> unitsInCastle) {
+        this.unitsInCastle = unitsInCastle;
+    }
+
+    public Unit getQueuemake() {
         return queuemake;
     }
 
-    public void setQueuemake(ArrayList<Unit> queuemake) {
+    public void setQueuemake(Unit queuemake) {
         this.queuemake = queuemake;
     }
 
@@ -74,47 +102,38 @@ public class Province implements Drawable, Comparable<Province> {
 
     public void update()
     {
-        for(Unit unit:queuemake)
-        {
-            unit.setCountYears(unit.getCountYears()-1);
-            if (unit.getCountYears()<=0)
+            if (queuemake!=null)
             {
-                units.add(unit);
-                queuemake.remove(unit);
+
+                queuemake.setCountYears(queuemake.getCountYears() - 1);
+                if (queuemake.getCountYears() <= 0)
+                {
+
+                    unitsInCastle.add(queuemake);
+                    queuemake = null;
+                }
             }
-        }
     }
 
 
-    public Province(ArrayList<Province> neighbours, String name, int level, Player owner) {
-        this.neighbours = neighbours;
-        this.name = name;
-        this.level = level;
-        this.owner = owner;
+
+    public void setPosition(Vector2 position) {
+        //appearance.setCenter(position.x, position.y);
+        appearance.setPosition(position.x, position.y);
+        appearance.setSize(100,100);
+        appearance.getAppearance().getImageCell().size(100,100);
+        appearance.getAppearance().setSize(100,100);
+
+        appearance.getAppearance().debug();
     }
 
-    public Sprite getAppearance() {
+
+    public UiProvince getAppearance() {
         return appearance;
     }
 
-    public Province(ArrayList<Province> neighbours, String name) {
-        this(neighbours, name, 1, null);
-    }
-
-    public Province(ArrayList<Province> neighbours, String name, Player owner) {
-        this(neighbours, name, 1, owner);
-    }
-
-    public Province(String name) {
-        this(null, name, 1, null);
-    }
-
-    public void setAppearance(Sprite appearance) {
+    public void setAppearance(UiProvince appearance) {
         this.appearance = appearance;
-    }
-
-    public void setPosition(Vector2 position) {
-        appearance.setCenter(position.x, position.y);
     }
 
     public ArrayList<Province> getNeighbours() {return neighbours;}
@@ -123,10 +142,10 @@ public class Province implements Drawable, Comparable<Province> {
 
     public String getName() {return this.name;}
 
-    @Override
+   /*@Override
     public void draw(SpriteBatch batch) {
         appearance.draw(batch);
-    }
+    }*/
 
     @Override
     public int compareTo(Province province) {

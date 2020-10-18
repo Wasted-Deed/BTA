@@ -16,8 +16,8 @@ import com.badlogic.gdx.utils.Array;
 
 import wastedgames.game.Main;
 import wastedgames.game.Tech.ConditionTech;
-import wastedgames.game.Tech.DescribeTech;
-import wastedgames.game.Tech.TechTreeDrawer;
+import wastedgames.game.Ui.Technology.DescribeTech;
+import wastedgames.game.Ui.Technology.TechTreeDrawer;
 import wastedgames.game.Tech.Technology;
 
 
@@ -112,7 +112,7 @@ public class ResearchWindow implements Screen
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
                     ExploreTech = describeTech.getCurrentTech();
-                    ExploreTech.setConditionTech(ConditionTech.EXPLORE);
+                    if (ExploreTech.getConditionTech()!=ConditionTech.LEARNED)ExploreTech.setConditionTech(ConditionTech.EXPLORE);
                 }
             });
         DrawerTree=new TechTreeDrawer(batch, skin,stage);
@@ -133,6 +133,7 @@ public class ResearchWindow implements Screen
             public void changed(ChangeEvent event, Actor actor)
             {
                 main.setScreen(main.getGameScreens().get("Field"));
+
             }
         });
         ButtonExit.setVisible(false);
@@ -147,6 +148,7 @@ public class ResearchWindow implements Screen
         describeTech.setVisible(true);
         DrawerTree.show();
         ButtonExit.setVisible(true);
+
     }
 
     @Override

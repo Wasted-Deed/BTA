@@ -36,6 +36,7 @@ public class Main extends Game
     public void create()
     {
         ResourceLoader.loadResources();
+
         batch = new SpriteBatch();
         GameScreens=new ObjectMap<>();
         camera = new OrthographicCamera();

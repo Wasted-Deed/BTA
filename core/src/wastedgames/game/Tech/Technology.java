@@ -10,7 +10,12 @@ public class Technology
 {
     private  String name;
     private ArrayList<Unit> openedUnit=new ArrayList();
-
+    private String description;
+    private ConditionTech conditionTech=ConditionTech.NO_LEARNED;
+    private int cost;
+    private boolean canExplore=false;
+    private  int id;
+    private Array<Technology> nextTechnologies;
 
     public ArrayList<Unit> getOpenedUnit() {
         return openedUnit;
@@ -20,13 +25,8 @@ public class Technology
         this.openedUnit = openedUnit;
     }
 
-    private String description;
-    private ConditionTech conditionTech=ConditionTech.NO_LEARNED;
-    private int cost;
 
-    private boolean canExplore=false;
-    private  int id;
-    private Array<Technology> nextTechnologies;
+
     public ConditionTech getConditionTech() {
         return conditionTech;
     }
@@ -68,16 +68,7 @@ public class Technology
     public void setCost(int cost)
     {
         this.cost = cost;
-        /*if (cost<=0)
-        {
-            conditionTech=ConditionTech.LEARNED;
-            Array.ArrayIterator<Technology> iterator = (Array.ArrayIterator<Technology>) nextTechnologies.iterator();
-            while(iterator.hasNext())
-            {
-                Technology current=iterator.next();
-                current.setCanExplore(true);
-            }
-        }*/
+
     }
 
     public String getDescription() {
