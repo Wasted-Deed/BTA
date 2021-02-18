@@ -16,7 +16,6 @@ import wastedgames.game.map.Unit;
 public class UiProvince extends Group
 {
     private ImageButton  appearance;
-    //private ArrayList<ImageButton> units=new ArrayList<>();
     private ObjectMap<ImageButton, Formation> units=new ObjectMap<>();
     public UiProvince(Drawable image)
     {
@@ -31,8 +30,8 @@ public class UiProvince extends Group
     }
     public void removeFormation(Formation formation)
     {
-        units.remove(formation.getAppearance());
-        removeActor(formation.getAppearance());
+        //units.remove(formation.getAppearance());
+       // removeActor(formation.getAppearance());
     }
     public ImageButton getAppearance() {
         return appearance;

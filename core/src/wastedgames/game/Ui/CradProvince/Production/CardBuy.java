@@ -40,7 +40,6 @@ public class CardBuy extends Group
      }
     public CardBuy(Skin skin)
     {
-
         this.b_buy=new TextButton("Make",skin);
         this.skin=skin;
         Description=new Group();
@@ -49,8 +48,6 @@ public class CardBuy extends Group
     }
      public void addDescription()
      {
-
-
          Description.setSize(name.getWidth(),getHeight()-name.getHeight()-b_buy.getHeight());
          Description.setPosition(1,getHeight()-name.getHeight()-Description.getHeight());
          Label price=new Label("Price: "+unit.getPrice(),skin);

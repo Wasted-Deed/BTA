@@ -45,10 +45,8 @@ public class ProductionPage extends Group
                     province.setQueuemake(newUnit);
                     for (CardBuy current: cards)
                        if (current!=card ) current.reset();
-
                 }
             });
-
             cards.add(card);
             army.addActor(card);
             count++;

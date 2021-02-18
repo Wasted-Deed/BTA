@@ -92,7 +92,7 @@ public class ButtonUnit extends TextButton
         style.down         = sprite;
         style.checked      = sprite;
         delete=new ImageButton(style);
-        delete.debug();
+       // delete.debug();
         delete.setStyle(style);
         delete.setSize(getWidth()/7,40);
         delete.setPosition(getWidth()-delete.getWidth(),name.getY());

@@ -17,6 +17,7 @@ import wastedgames.game.Tech.Technology;
 import wastedgames.game.Ui.Card;
 import wastedgames.game.maintenance.ResourceLoader;
 import wastedgames.game.map.Cavalry;
+import wastedgames.game.map.Formation;
 import wastedgames.game.map.Infantry;
 import wastedgames.game.map.Map;
 import wastedgames.game.map.Player;
@@ -32,6 +33,7 @@ public class GameField implements Screen
     Stage stage;
     Skin skin;
     Player player=new Player();
+    Player player2=new Player();
     private int year;
 
 
@@ -49,16 +51,8 @@ public class GameField implements Screen
         return map;
     }
 
-    public GameField(Skin skin, SpriteBatch batch, OrthographicCamera camera, final Main game, Stage stage)
+    public void initTechTree()
     {
-        this.main=game;
-        this.batch=batch;
-        this.camera=camera;
-        this.skin=skin;
-        this.stage=stage;
-        ButtonsUI=new Array<>();
-
-
         Technology tech1=new Technology("Basic infantry",1);
         tech1.getOpenedUnit().add(new Infantry(1));
         tech1.setDescription("Costs 1 years.You will unlock the infantry ");
@@ -82,6 +76,18 @@ public class GameField implements Screen
         tech1.getNextTechnologies().add(tech4);
         tech4.getNextTechnologies().add(tech5);
         player.setAllTechnologies(tech1);
+    }
+    public GameField(Skin skin, SpriteBatch batch, OrthographicCamera camera, final Main game, Stage stage)
+    {
+        this.main=game;
+        this.batch=batch;
+        this.camera=camera;
+        this.skin=skin;
+        this.stage=stage;
+        ButtonsUI=new Array<>();
+        initTechTree();
+
+
 
         final TextButton BNextMove=new TextButton(String.valueOf(year),skin);
         BNextMove.setHeight(50);
@@ -97,8 +103,9 @@ public class GameField implements Screen
                     ResearchWindow win= (ResearchWindow) main.getGameScreens().get("Technologies");
                     player.setCurrentExlpore(win.getExploreTech());
                     player.getAllTechnologies().update(player.getCurrentExlpore());
-                    map.nextMove();
+
                     player.update();
+                    map.nextMove(stage);
                     year++;
                     BNextMove.setText("Year: "+year);
                     showEvent("Goodbye "+year);
@@ -125,22 +132,31 @@ public class GameField implements Screen
         });
 
         map = new Map(skin);
+        map.setBatch(batch);
         map.setHuman(player);
-        map.setPosition(0,50);
-        map.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()-100);
+      //  map.setPosition(0,50);
+       // map.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()-100);
         map.fillMap();
-        map.debug();
 
-       map.getProvinces().get(0).setOwner(player);
+        map.getProvinces().get(0).setOwner(player);
         map.getProvinces().get(1).setOwner(player);
+        map.getProvinces().get(2).setOwner(player2);
 
-        stage.addActor(map);
+        Formation enemy=new Formation();
+        enemy.setOwner(player2);
+        enemy.setLocation(map.getProvinces().get(2));
+        enemy.getUnits().add(new Infantry(3));
+
+
+        map.getProvinces().get(2).addFormation(enemy);
+
+        //stage.addActor(map);
         stage.addActor(BTechTree);
         showEvent("Hello!");
         ButtonsUI.add(BTechTree);
 
         Gdx.input.setInputProcessor(stage);
-
+        map.setVisible(true);
     }
 
 
@@ -164,17 +180,16 @@ public class GameField implements Screen
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-        batch.begin();
         map.update(stage,skin);
-       /// map.draw(batch);
 
+        batch.begin();
+        map.draw();
         for (int i=0;i<ButtonsUI.size;i++)
         {
             TextButton currentButton=ButtonsUI.get(i);
             currentButton.draw(batch,1);
         }
         batch.end();
-
         stage.act(100);
         stage.draw();
     }
@@ -202,6 +217,7 @@ public class GameField implements Screen
            TextButton button=ButtonsUI.get(0);
            button.setVisible(false);
        }
+
         map.setVisible(false);
     }
 

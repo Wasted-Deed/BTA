@@ -3,7 +3,6 @@ package wastedgames.game.map;
 import com.badlogic.gdx.utils.Array;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import wastedgames.game.Tech.ConditionTech;
 import wastedgames.game.Tech.Technology;
@@ -12,6 +11,16 @@ public class Player {
     private Type mType;
     private String name;
     private Technology AllTechnologies;
+    private ArrayList<Province> provinceWithEnemy=new ArrayList<>();
+
+    public ArrayList<Province> getProvinceWithEnemy() {
+        return provinceWithEnemy;
+    }
+
+    public void setProvinceWithEnemy(ArrayList<Province> provinceWithEnemy) {
+        this.provinceWithEnemy = provinceWithEnemy;
+    }
+
     private ArrayList<Technology> Learned_technologies;
     private Technology currentExlpore=new Technology("",-1);
     private boolean ai=true;
@@ -19,12 +28,11 @@ public class Player {
     private ArrayList<Province> provinces;
 
 
-
     public Formation getSelectFormation()
     {
         for(Formation formation:army.getFormations())
         {
-            if (formation.getAppearance().isChecked()) return formation;
+            if (formation.getAppearance().isPressed()) return formation;
         }
         return  null;
     }
@@ -109,6 +117,7 @@ public class Player {
     public void makeMove()
     {
        army.getFormations().forEach(Formation::move);
+
     }
 
     public Type getmType() {

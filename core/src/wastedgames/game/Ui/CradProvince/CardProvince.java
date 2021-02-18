@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import wastedgames.game.Ui.CradProvince.Information.InfoPage;
 import wastedgames.game.Ui.CradProvince.Production.ProductionPage;
+import wastedgames.game.map.Player;
 import wastedgames.game.map.Province;
 
 public class CardProvince extends Dialog
@@ -61,7 +62,6 @@ public class CardProvince extends Dialog
         this.getContentTable().add(production);
         this.getContentTable().add(information);
 
-        getButtonTable().debug();
 
         TextButton b_production=new TextButton("Production",skin);
         b_production.setWidth((float) (getWidth()*0.4));

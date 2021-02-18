@@ -1,4 +1,7 @@
 package wastedgames.game.Event;
 
-public class EventGame {
+public abstract class EventGame
+{
+    private  String name;
+
 }

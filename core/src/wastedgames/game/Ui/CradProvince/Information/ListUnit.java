@@ -18,7 +18,7 @@ public class ListUnit extends ScrollPane
     private Province province;
     private boolean   getoutUnits=false;
     private Formation formation=new Formation();
-    private ArrayList<wastedgames.game.Ui.CradProvince.Information.ButtonUnit> b_units=new ArrayList<>();
+    private ArrayList<ButtonUnit> b_units=new ArrayList<>();
     Table scrollTable = new Table();
     public boolean isGetoutUnits() {
         return getoutUnits;
@@ -36,11 +36,11 @@ public class ListUnit extends ScrollPane
         this.formation = formation;
     }
 
-    public ArrayList<wastedgames.game.Ui.CradProvince.Information.ButtonUnit> getB_units() {
+    public ArrayList<ButtonUnit> getB_units() {
         return b_units;
     }
 
-    public void setB_units(ArrayList<wastedgames.game.Ui.CradProvince.Information.ButtonUnit> b_units) {
+    public void setB_units(ArrayList<ButtonUnit> b_units) {
         this.b_units = b_units;
     }
 
@@ -64,8 +64,10 @@ public class ListUnit extends ScrollPane
         return province;
     }
 
-    public void setProvince(Province province) {
+    public void setProvince(Province province)
+    {
         this.province = province;
+        formation.setOwner(province.getOwner());
     }
 
     public Table getScrollTable() {
@@ -80,10 +82,11 @@ public class ListUnit extends ScrollPane
     {
         scrollTable.setSize(getWidth(),getHeight());
         scrollTable.setPosition(getX(),getY());
-        scrollTable.debug();
+
+        //scrollTable.debug();
         for (final Unit unit:province.getUnitsInCastle())
         {
-            final wastedgames.game.Ui.CradProvince.Information.ButtonUnit W_unit=new ButtonUnit("",skin);
+            final ButtonUnit W_unit=new ButtonUnit("",skin);
             W_unit.setUnit(unit);
             W_unit.setSize(getWidth()/6,getHeight()/3);
             W_unit.addLabelName(0,scrollTable.getHeight()-50,unit.getName());

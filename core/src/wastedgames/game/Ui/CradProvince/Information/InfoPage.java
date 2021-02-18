@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import wastedgames.game.maintenance.Image;
 import wastedgames.game.maintenance.ResourceLoader;
+import wastedgames.game.map.Formation;
+import wastedgames.game.map.Player;
 import wastedgames.game.map.Province;
 
 public class InfoPage extends Group
@@ -23,10 +25,11 @@ public class InfoPage extends Group
 
 
 
-    public InfoPage(Skin skin,Province province,float width,float height)
+    public InfoPage(Skin skin, Province province, float width, float height)
     {
 
         setSize(width,height);
+
         this.province=province;
         TitleInfo=new Label("Description",skin);
         TitleInfo.setSize(getWidth()/3,100);
@@ -46,13 +49,15 @@ public class InfoPage extends Group
 
         addActor(TitleInfo);
         addActor(statistics);
-        units=new ListUnit(null);
-        units.setSize(getWidth(),getHeight()/3);
+
 
         Label nameListUnit=new Label("Troops in the castle",skin);
         nameListUnit.setSize(getWidth()/3,100);
         nameListUnit.setPosition((float) (1.25*getWidth()/3),statistics.getY()-nameListUnit.getHeight());
         nameListUnit.setFontScale((float) 3);
+
+        units=new ListUnit(null);
+        units.setSize(getWidth(),getHeight()/3);
         units.setPosition(0,nameListUnit.getY()-units.getHeight());
         units.setProvince(province);
         units.settingListUnit(skin);
@@ -97,10 +102,12 @@ public class InfoPage extends Group
                     });
 
         style = new ImageButton.ImageButtonStyle();
+
         sprite=new SpriteDrawable(ResourceLoader.getSprite(Image.GET_OUT));
         style.up=sprite;
         style.down         = sprite;
         style.checked      = sprite;
+
         ImageButton getOutCastle=new ImageButton(style);
         getOutCastle.setStyle(style);
         getOutCastle.setSize(units.getWidth()/25,units.getWidth()/25);
@@ -112,17 +119,19 @@ public class InfoPage extends Group
                 public void changed(ChangeEvent event, Actor actor)
                 {
 
-                    units.getB_units().forEach(buttonUnit ->
-                    {
+                    units.getB_units().forEach(buttonUnit -> {
                         if (buttonUnit.isChecked())
                         {
                             province.getUnitsInCastle().remove(buttonUnit.getUnit());
                             units.getScrollTable().getCells().removeValue(units.getScrollTable().getCell(buttonUnit),true);
                             buttonUnit.remove();
                         } });
+                    Formation formation=units.getFormation().clone();
 
-                    province.addFormation(units.getFormation());
-                    province.getOwner().getArmy().getFormations().add(units.getFormation());
+
+
+                    province.addFormation(formation);
+                    province.getOwner().getArmy().getFormations().add(formation);
                     units.getFormation().getUnits().clear();
 
                 }

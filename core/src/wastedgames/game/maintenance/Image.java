@@ -1,5 +1,5 @@
 package wastedgames.game.maintenance;
 
 public enum Image {
-    PROVINCE_PARIS, CLOSE ,  GET_OUT,FORMATION,SELECT_FORMATION;
+    PROVINCE0,PROVINCE1, CLOSE ,  GET_OUT,FORMATION,SELECT_FORMATION,INFATRY,CAVALRY,BattleBackground;
 }

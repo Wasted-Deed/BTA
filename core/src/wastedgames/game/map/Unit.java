@@ -20,7 +20,6 @@ public abstract class Unit implements Cloneable
     private String name;
     private int current_health;
     private int max_health;
-    private boolean selected;
 
 
 
@@ -38,6 +37,15 @@ public abstract class Unit implements Cloneable
     private int level;
     private int countYears;
     private int armor;
+    private int morale;
+
+    public int getMorale() {
+        return morale;
+    }
+
+    public void setMorale(int morale) {
+        this.morale = morale;
+    }
 
     public enum UnitType {
         INFANTRY, CAVALRY
@@ -55,8 +63,11 @@ public abstract class Unit implements Cloneable
         this.name = name;
     }
 
-    public void setCurrent_health(int current_health) {
+    public void setCurrent_health(int current_health)
+    {
+        this.morale-=  (this.current_health-current_health);
         this.current_health = current_health;
+
     }
 
     public void setPower(int power) {
@@ -87,7 +98,7 @@ public abstract class Unit implements Cloneable
         this.armor = armor;
     }
 
-    public Unit(UnitType unitType, int current_health,int max_health, int power, int speed, int price, int armor, int level, int countYears, String  name) {
+    public Unit(UnitType unitType, int current_health,int max_health, int power, int speed, int price, int armor, int level, int countYears, String  name,int morale) {
         this.unitType = unitType;
         this.current_health = current_health;
         this.max_health=max_health;
@@ -98,6 +109,7 @@ public abstract class Unit implements Cloneable
         this.armor = armor;
         this.countYears=countYears;
         this.name=name;
+        this.morale=morale;
     }
 
     public int getCurrent_health() {

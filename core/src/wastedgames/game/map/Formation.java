@@ -5,13 +5,24 @@ import com.badlogic.gdx.scenes.scene2d.utils.SpriteDrawable;
 
 import java.util.ArrayList;
 
+
+import wastedgames.game.Ui.map.UiFormation;
 import wastedgames.game.maintenance.Image;
 import wastedgames.game.maintenance.ResourceLoader;
 
 public class Formation implements Cloneable {
-    // number of units
+    private Player owner;
+
+    public Player getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = owner;
+    }
+
     private int counter;
-    private ImageButton appearance;
+   private UiFormation appearance;
     private Province location;
 
     private ArrayList<Unit>  units= new ArrayList<>();
@@ -20,28 +31,19 @@ public class Formation implements Cloneable {
         return location;
     }
 
-
-
     public void move()
     {
-        if (track.size()!=0) {
-            location.removeFormation(this);
-            location = track.get(0);
-            track.get(0).addFormation(this);
-            track.remove(0);
-        }
+            if (track.size() != 0) {
+                location.removeFormation(this);
+                location = track.get(0);
+                track.get(0).addFormation(this);
+                track.remove(0);
+            }
     }
-    public void setLocation(Province location) {
+    public void setLocation(Province location)
+    {
         this.location = location;
     }
-
-
-    public void setAppearance(ImageButton appearance) {
-        this.appearance = appearance;
-    }
-
-    // the current way
-
 
     public int getCounter() {
         return counter;
@@ -69,23 +71,28 @@ public class Formation implements Cloneable {
     @Override
     public Formation clone()
     {
-        return new Formation(this.counter,this.track,this.units,this.appearance);
-    }
-
-    public ImageButton getAppearance() {
-        return appearance;
+        return new Formation(this.counter,this.track,this.units,this.appearance,this.owner);
     }
 
     public Formation()
     {
-        appearance=new ImageButton(new SpriteDrawable(ResourceLoader.getSprite(Image.FORMATION)),new SpriteDrawable(ResourceLoader.getSprite(Image.FORMATION)),new SpriteDrawable(ResourceLoader.getSprite(Image.SELECT_FORMATION)));
+       appearance=new UiFormation();
     }
 
-    public Formation(int counter, ArrayList<Province> track, ArrayList<Unit> units,ImageButton image)
+    public UiFormation getAppearance() {
+        return appearance;
+    }
+
+    public void setAppearance(UiFormation appearance) {
+        this.appearance = appearance;
+    }
+    public Formation(int counter, ArrayList<Province> track, ArrayList<Unit> units,UiFormation image,Player owner)
     {
         this.counter = counter;
         this.track = track;
-        this.units = units;
+        this.units = new ArrayList<>(units);
         this.appearance=image;
+        this.owner=owner;
     }
+
 }
